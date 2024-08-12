@@ -1,24 +1,23 @@
-// Build the metadata panel
+//********************************************************
+// Function to build the metadata panel
+//********************************************************
 function buildMetadata(selectedValue) {
   d3.json("https://static.bc-edx.com/data/dl-1-2/m14/lms/starter/samples.json").then((data) => {
 
-    // console.log(`Data: ${data}`);
-
-    // get the metadata field
+    // Get the metadata field
     let metadata = data.metadata;
 
     // Filter the metadata for the object with the desired sample number
     let filteredData = metadata.filter(meta => meta.id == selectedValue);
     let result = filteredData[0];
 
-    // Use d3 to select the panel with id of `#sample-metadata`
+    // Using d3 to select the panel with id of `#sample-metadata`
     let sampleMetaData = d3.select("#sample-metadata");
 
-    // Use `.html("") to clear any existing metadata
-    // d3.select("#sample-metadata").html("");
+    // Clear any existing metadata
     sampleMetaData.html(""); // This should work instead of above
 
-    // Inside a loop, you will need to use d3 to append new
+    // Inside a loop, use d3 to append new
     // tags for each key-value in the filtered metadata.
     Object.entries(result).forEach(([key, value]) => {
       sampleMetaData.append("h6").text(`${key.toUpperCase()}: ${value}`);
@@ -29,7 +28,9 @@ function buildMetadata(selectedValue) {
   });
 }
 
-// function to build both charts
+//********************************************************
+// Function to build both charts
+//********************************************************
 function buildCharts(selectedValue) {
   d3.json("https://static.bc-edx.com/data/dl-1-2/m14/lms/starter/samples.json").then((data) => {
     // Get the samples field
@@ -70,11 +71,10 @@ function buildCharts(selectedValue) {
 
   Plotly.newPlot('bubble', bubbleData, bubbleLayout);
 
-  // For the Bar Chart, map the otu_ids to a list of strings for your yticks
+  // For the Bar Chart, map the otu_ids to a list of strings for yticks
   let yticks = otu_ids.slice(0, 10).map(otuID => `OTU ${otuID}`).reverse();
 
   // Build a Bar Chart
-  // Don't forget to slice and reverse the input data appropriately
   let barData = [{
     y: yticks,
     x: sample_values.slice(0, 10).reverse(),
@@ -93,7 +93,9 @@ function buildCharts(selectedValue) {
   });
 }
 
+//********************************************************
 // Function to run on page load
+//********************************************************
 function init() {
   d3.json("https://static.bc-edx.com/data/dl-1-2/m14/lms/starter/samples.json").then((data) => {
 
@@ -106,8 +108,6 @@ function init() {
     let dropdownMenu = d3.select("#selDataset");
 
     // Use the list of sample names to populate the select options
-    // Hint: Inside a loop, you will need to use d3 to append a new
-    // option for each sample name.
     names.forEach((name) => {
       dropdownMenu.append("option").text(name).property("value", name);
     });
@@ -120,13 +120,14 @@ function init() {
   });
 }
 
+//********************************************************
 // Function for event listener
+//********************************************************
 function optionChanged(newSample) {
   // Build charts and metadata panel each time a new sample is selected
   console.log("Sample selected:", newSample);
   buildCharts(newSample);
   buildMetadata(newSample);
-  // buildGaugeChart(newSample); 
 }
 
 // Initialize the dashboard
